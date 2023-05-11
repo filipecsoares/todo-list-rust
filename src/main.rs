@@ -24,6 +24,7 @@ impl Todo {
 
     fn insert(&mut self, key: String) {
         self.map.insert(key, true);
+        self.show();
     }
 
     fn save(self) -> Result<(), Box<dyn std::error::Error>> {
@@ -41,6 +42,12 @@ impl Todo {
         match self.map.get_mut(key) {
             Some(v) => Some(*v = false),
             None => None,
+        }
+    }
+
+    fn show(&self) {
+        for (k, v) in self.map.clone().into_iter() {
+            println!("{} {}", k, v);
         }
     }
 }
