@@ -25,7 +25,6 @@ impl Todo {
 
     fn insert(&mut self, key: String) {
         self.map.insert(key, true);
-        self.show();
     }
 
     fn save(self) -> Result<(), Box<dyn std::error::Error>> {
@@ -48,7 +47,11 @@ impl Todo {
 
     fn show(&self) {
         for (k, v) in self.map.clone().into_iter() {
-            println!("{} {}", k, v);
+            if v {
+                print!("[ ] {}", k);
+            } else {
+                print!("[X] {}", k);
+            }
         }
     }
 }
@@ -72,6 +75,8 @@ fn main() {
                 Err(why) => println!("An error occurred: {}", why),
             },
         }
+    } else if action == "show" {
+        todo.show();
     }
 }
 
