@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::io;
 
 struct Todo {
     map: HashMap<String, bool>,
@@ -54,15 +55,16 @@ impl Todo {
 
 fn main() {
     let action = std::env::args().nth(1).expect("Please specify an action.");
-    let item = std::env::args().nth(2).expect("Please specify an item.");
     let mut todo = Todo::new().expect("Initialization of db failed!");
     if action == "add" {
+        let item = read_task_name();
         todo.insert(item);
         match todo.save() {
             Ok(_) => println!("todo saved!"),
             Err(why) => println!("An error occurred: {}", why),
         }
     } else if action == "complete" {
+        let item = read_task_name();
         match todo.complete(&item) {
             None => println!("'{}' is not present in the list", item),
             Some(_) => match todo.save() {
@@ -71,4 +73,12 @@ fn main() {
             },
         }
     }
+}
+
+fn read_task_name() -> String {
+    let mut item = String::new();
+    let stdin = io::stdin();
+    println!("Task name:");
+    stdin.read_line(&mut item).expect("Error on reading the input.");
+    return item;
 }
