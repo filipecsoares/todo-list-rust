@@ -45,6 +45,13 @@ impl Todo {
         }
     }
 
+    fn remove(&mut self, key: &String) -> Option<()> {
+        match self.map.remove_entry(key) {
+            Some((_k, _v)) => Some(()),
+            None => None,
+        }
+    }
+
     fn show(&self) {
         for (k, v) in self.map.clone().into_iter() {
             if v {
@@ -77,6 +84,15 @@ fn main() {
         }
     } else if action == "show" {
         todo.show();
+    } else if action == "remove" {
+        let item = read_task_name();
+        match todo.remove(&item) {
+            None => println!("'{}' is not present in the list", item),
+            Some(_) => match todo.save() {
+                Ok(_) => println!("item removed"),
+                Err(why) => println!("An error occurred: {}", why),
+            },
+        }
     }
 }
 
