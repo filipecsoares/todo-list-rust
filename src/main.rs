@@ -45,6 +45,15 @@ impl Todo {
         }
     }
 
+    fn edit(&mut self, key: &String, new_name: String) -> Option<()> {
+        if let Some(v) = self.map.remove(key) {
+            self.map.insert(new_name, v);
+            Some(())
+        } else {
+            None
+        }
+    }
+
     fn remove(&mut self, key: &String) -> Option<()> {
         match self.map.remove_entry(key) {
             Some((_k, _v)) => Some(()),
@@ -55,9 +64,9 @@ impl Todo {
     fn show(&self) {
         for (k, v) in self.map.clone().into_iter() {
             if v {
-                print!("[ ] {}", k);
+                println!("[ ] {}", k);
             } else {
-                print!("[X] {}", k);
+                println!("[X] {}", k);
             }
         }
     }
@@ -90,6 +99,18 @@ fn main() {
             None => println!("'{}' is not present in the list", item),
             Some(_) => match todo.save() {
                 Ok(_) => println!("item removed"),
+                Err(why) => println!("An error occurred: {}", why),
+            },
+        }
+    } else if action == "edit" {
+        print!("To Edit ");
+        let item = read_task_name();
+        print!("Edit to ");
+        let new_name = read_task_name();
+        match todo.edit(&item, new_name) {
+            None => println!("'{}' is not present in the list", item),
+            Some(_) => match todo.save() {
+                Ok(_) => println!("item edited"),
                 Err(why) => println!("An error occurred: {}", why),
             },
         }
