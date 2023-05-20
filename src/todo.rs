@@ -61,11 +61,11 @@ impl Todo {
     }
 
     pub fn show(&self) {
-        for (k, v) in self.map.clone().into_iter() {
-            if v {
-                println!("[ ] {}", k);
+        for (key, value) in self.map.clone().into_iter() {
+            if value {
+                println!("[ ] {}", key);
             } else {
-                println!("[X] {}", k);
+                println!("[X] {}", key);
             }
         }
     }
