@@ -6,12 +6,7 @@ fn main() {
     let action = std::env::args().nth(1).expect("Please specify an action.");
     let mut todo = todo::Todo::new().expect("Initialization of db failed!");
     if action == "add" {
-        let item = read_task_name();
-        todo.insert(item);
-        match todo.save() {
-            Ok(_) => println!("todo saved!"),
-            Err(why) => println!("An error occurred: {}", why),
-        }
+        add_task();
     } else if action == "complete" {
         let item = read_task_name();
         match todo.complete(&item) {
@@ -44,6 +39,16 @@ fn main() {
                 Err(why) => println!("An error occurred: {}", why),
             },
         }
+    }
+}
+
+fn add_task() {
+    let mut todo = todo::Todo::new().expect("Initialization of db failed!");
+    let item = read_task_name();
+    todo.insert(item);
+    match todo.save() {
+        Ok(_) => println!("todo saved!"),
+        Err(why) => println!("An error occurred: {}", why),
     }
 }
 
