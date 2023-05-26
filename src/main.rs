@@ -4,41 +4,60 @@ use std::io;
 
 fn main() {
     let action = std::env::args().nth(1).expect("Please specify an action.");
-    let mut todo = todo::Todo::new().expect("Initialization of db failed!");
     if action == "add" {
         add_task();
     } else if action == "complete" {
-        let item = read_task_name();
-        match todo.complete(&item) {
-            None => println!("'{}' is not present in the list", item),
-            Some(_) => match todo.save() {
-                Ok(_) => println!("todo saved"),
-                Err(why) => println!("An error occurred: {}", why),
-            },
-        }
+        mark_as_complete();
     } else if action == "show" {
-        todo.show();
+        show_todo();
     } else if action == "remove" {
-        let item = read_task_name();
-        match todo.remove(&item) {
-            None => println!("'{}' is not present in the list", item),
-            Some(_) => match todo.save() {
-                Ok(_) => println!("item removed"),
-                Err(why) => println!("An error occurred: {}", why),
-            },
-        }
+        remove_task();
     } else if action == "edit" {
-        print!("To Edit ");
-        let item = read_task_name();
-        print!("Edit to ");
-        let new_name = read_task_name();
-        match todo.edit(&item, new_name) {
-            None => println!("'{}' is not present in the list", item),
-            Some(_) => match todo.save() {
-                Ok(_) => println!("item edited"),
-                Err(why) => println!("An error occurred: {}", why),
-            },
-        }
+        edit_task_name();
+    }
+}
+
+fn edit_task_name() {
+    let mut todo = get_todo();
+    print!("To Edit ");
+    let item = read_task_name();
+    print!("Edit to ");
+    let new_name = read_task_name();
+    match todo.edit(&item, new_name) {
+        None => println!("'{}' is not present in the list", item),
+        Some(_) => match todo.save() {
+            Ok(_) => println!("item edited"),
+            Err(why) => println!("An error occurred: {}", why),
+        },
+    }
+}
+
+fn remove_task() {
+    let mut todo = get_todo();
+    let item = read_task_name();
+    match todo.remove(&item) {
+        None => println!("'{}' is not present in the list", item),
+        Some(_) => match todo.save() {
+            Ok(_) => println!("item removed"),
+            Err(why) => println!("An error occurred: {}", why),
+        },
+    }
+}
+
+fn show_todo() {
+    let todo = get_todo();
+    todo.show();
+}
+
+fn mark_as_complete() {
+    let mut todo = get_todo();
+    let item = read_task_name();
+    match todo.complete(&item) {
+        None => println!("'{}' is not present in the list", item),
+        Some(_) => match todo.save() {
+            Ok(_) => println!("todo saved"),
+            Err(why) => println!("An error occurred: {}", why),
+        },
     }
 }
 
