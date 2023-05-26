@@ -43,7 +43,7 @@ fn main() {
 }
 
 fn add_task() {
-    let mut todo = todo::Todo::new().expect("Initialization of db failed!");
+    let mut todo = get_todo();
     let item = read_task_name();
     todo.insert(item);
     match todo.save() {
@@ -52,10 +52,14 @@ fn add_task() {
     }
 }
 
+fn get_todo() -> todo::Todo {
+    todo::Todo::new().expect("Initialization of db failed!")
+}
+
 fn read_task_name() -> String {
     let mut item = String::new();
     let stdin = io::stdin();
     println!("Task name:");
     stdin.read_line(&mut item).expect("Error on reading the input.");
-    return item;
+    return item.trim().to_string();
 }
