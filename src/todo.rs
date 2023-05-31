@@ -45,8 +45,8 @@ impl Todo {
     }
 
     pub fn edit(&mut self, key: &String, new_name: String) -> Option<()> {
-        if let Some(v) = self.map.remove(key) {
-            self.map.insert(new_name, v);
+        if let Some(value) = self.map.remove(key) {
+            self.map.insert(new_name, value);
             Some(())
         } else {
             None
